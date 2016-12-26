@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<connections>
+    <connection from="n_0" to="0_s"/>
+    <connection from="e_0" to="0_w"/>
+    <connection from="s_0" to="0_n"/>
+    <connection from="w_0" to="0_e"/>
+</connections>
