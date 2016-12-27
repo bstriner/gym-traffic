@@ -18,23 +18,24 @@ else:
 
 
 class TrafficEnv(Env):
-    metadata = {'render.modes': ['human']}
+    metadata = {'render.modes': ['human', 'rgb_array']}
 
     def __init__(self, lights, netfile, routefile, guifile, addfile, loops=[], tmpfile="tmp.rou.xml",
                  pngfile="tmp.png", mode="gui", detector="detector0", simulation_end=3600):
         # "--end", str(simulation_end),
         self.simulation_end = simulation_end
+        self.mode=mode
         self._seed()
         self.loops = loops
         self.loop_variables = [tc.LAST_STEP_MEAN_SPEED, tc.LAST_STEP_TIME_SINCE_DETECTION, tc.LAST_STEP_VEHICLE_NUMBER]
         self.detector = detector
-        args = ["--net-file", netfile, "--route-files", tmpfile, "--gui-settings-file",
-                guifile, "--additional-files", addfile]
+        args = ["--net-file", netfile, "--route-files", tmpfile, "--additional-files", addfile]
         if mode == "gui":
             binary = "sumo-gui"
-            args += ["-S", "-Q"]
+            args += ["-S", "-Q", "--gui-settings-file", guifile]
         else:
             binary = "sumo"
+            args += ["--no-step-log"]
 
         with open(routefile) as f:
             self.route = f.read()
@@ -74,6 +75,7 @@ class TrafficEnv(Env):
                 traci.inductionloop.subscribe(loopid, self.loop_variables)
             self.sumo_step = 0
             self.sumo_running = True
+            self.screenshot()
 
     def stop_sumo(self):
         if self.sumo_running:
@@ -96,9 +98,14 @@ class TrafficEnv(Env):
         observation = self._observation()
         reward = self._reward()
         done = self.sumo_step > self.simulation_end
+        self.screenshot()
         if done:
             self.stop_sumo()
         return observation, reward, done, self.route_info
+
+    def screenshot(self):
+        if self.mode == "gui":
+            traci.gui.screenshot("View #0", self.pngfile)
 
     def _observation(self):
         res = traci.inductionloop.getSubscriptionResults()
@@ -117,17 +124,19 @@ class TrafficEnv(Env):
         return observation
 
     def _render(self, mode='human', close=False):
-        if close:
-            if self.viewer is not None:
-                self.viewer.close()
-                self.viewer = None
-            return
-        traci.gui.screenshot("View #0", self.pngfile)
-        img = imread(self.pngfile, mode="RGB")
-        if mode == 'rgb_array':
-            return img
-        elif mode == 'human':
-            from gym.envs.classic_control import rendering
-            if self.viewer is None:
-                self.viewer = rendering.SimpleImageViewer()
-            self.viewer.imshow(img)
+        if self.mode == "gui":
+            if close:
+                if self.viewer is not None:
+                    self.viewer.close()
+                    self.viewer = None
+                return
+            img = imread(self.pngfile, mode="RGB")
+            if mode == 'rgb_array':
+                return img
+            elif mode == 'human':
+                from gym.envs.classic_control import rendering
+                if self.viewer is None:
+                    self.viewer = rendering.SimpleImageViewer()
+                self.viewer.imshow(img)
+        else:
+            raise NotImplementedError("Only rendering in GUI mode is supported. Please use Traffic-...-gui-v0.")
