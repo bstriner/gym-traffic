@@ -43,9 +43,14 @@ class TrafficEnv(Env):
         self.sumo_cmd = [binary] + args
         self.sumo_step = 0
         self.lights = lights
-        self.action_space = spaces.Tuple([spaces.Discrete(len(light.actions)) for light in self.lights])
-        self.observation_space = spaces.Box(low=float('-inf'), high=float('inf'),
-                                            shape=(len(self.loops) * len(self.loop_variables),))
+        self.action_space = spaces.DiscreteToMultiDiscrete(
+            spaces.MultiDiscrete([[0, len(light.actions)-1] for light in self.lights]), 'all')
+
+        trafficspace = spaces.Box(low=float('-inf'), high=float('inf'),
+                                  shape=(len(self.loops) * len(self.loop_variables),))
+        lightspaces = [spaces.Discrete(len(light.actions)) for light in self.lights]
+        self.observation_space = spaces.Tuple([trafficspace] + lightspaces)
+
         self.sumo_running = False
         self.viewer = None
 
@@ -58,7 +63,6 @@ class TrafficEnv(Env):
             f.write(Template(self.route).substitute(self.route_info))
 
     def _seed(self, seed=None):
-        print "Seeding"
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
@@ -81,6 +85,7 @@ class TrafficEnv(Env):
         return speed
 
     def _step(self, action):
+        action = self.action_space(action)
         self.start_sumo()
         self.sumo_step += 1
         assert (len(action) == len(self.lights))
@@ -91,6 +96,8 @@ class TrafficEnv(Env):
         observation = self._observation()
         reward = self._reward()
         done = self.sumo_step > self.simulation_end
+        if done:
+            self.stop_sumo()
         return observation, reward, done, self.route_info
 
     def _observation(self):
@@ -99,7 +106,9 @@ class TrafficEnv(Env):
         for loop in self.loops:
             for var in self.loop_variables:
                 obs.append(res[loop][var])
-        return np.array(obs)
+        trafficobs = np.array(obs)
+        lightobs = [light.state for light in self.lights]
+        return (trafficobs, lightobs)
 
     def _reset(self):
         self.stop_sumo()
