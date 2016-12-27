@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<additional>
+    <inductionLoop id="loop0" lane="n_0_0" pos="-200" freq="1" file="out.xml"/>
+    <inductionLoop id="loop1" lane="s_0_0" pos="-200" freq="1" file="out.xml"/>
+    <inductionLoop id="loop2" lane="e_0_0" pos="-200" freq="1" file="out.xml"/>
+    <inductionLoop id="loop3" lane="w_0_0" pos="-200" freq="1" file="out.xml"/>
+    <inductionLoop id="loop4" lane="0_n_0" pos="100" freq="1" file="out.xml"/>
+    <inductionLoop id="loop5" lane="0_s_0" pos="100" freq="1" file="out.xml"/>
+    <inductionLoop id="loop6" lane="0_e_0" pos="100" freq="1" file="out.xml"/>
+    <inductionLoop id="loop7" lane="0_w_0" pos="100" freq="1" file="out.xml"/>
+    <entryExitDetector id="detector0" freq="1" file="out.xml" >
+      <detEntry lane="n_0_0" pos="50" />
+      <detEntry lane="s_0_0" pos="50" />
+      <detEntry lane="e_0_0" pos="50" />
+      <detEntry lane="w_0_0" pos="50" />
+      <detExit lane="0_s_0" pos="-50" />
+      <detExit lane="0_n_0" pos="-50" />
+      <detExit lane="0_w_0" pos="-50" />
+      <detExit lane="0_e_0" pos="-50" />
+   </entryExitDetector>
+</additional>

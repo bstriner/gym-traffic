@@ -3,4 +3,9 @@ netconvert --connection-files simple.con.xml --node-files=simple.nod.xml --edge-
 sumo-gui --begin=0 --end=1000 -S --net-file=simple.net.xml --route-files=simple.rou.xml --gui-settings-file=view.settings.xml
 
 
+
+sumo-gui --begin=0 --end=1000 -S --net-file traffic.net.xml --route-files traffic.rou.xml --gui-settings-file view.settings.xml
+
+
+
 netconvert --connection-files traffic.con.xml --node-files=traffic.nod.xml --edge-files=traffic.edg.xml --output-file=traffic.net.xml
