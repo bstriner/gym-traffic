@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 
 class SimpleRunner(object):
     def __init__(self, max_steps_per_episode = 10000):
@@ -6,17 +7,17 @@ class SimpleRunner(object):
 
     def run(self, env, agent, nb_episodes = 100, render=True, verbose=True, train=True):
         episode_rewards = []
-        for episode in range(nb_episodes):
+        for episode in tqdm(range(nb_episodes)):
             agent.new_episode()
             observation = env.reset()
             agent.observe(observation)
-            total_reward = 0
+            total_reward = 0.0
             for t in range(10000):
                 if render:
                     env.render()
                 action = agent.act()
                 observation, reward, done, info = env.step(action)
-                reward += total_reward
+                total_reward += reward
                 agent.observe(observation)
                 if train:
                     agent.learn(action, reward)

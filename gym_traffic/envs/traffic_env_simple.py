@@ -7,13 +7,14 @@ class TrafficEnvSimple(TrafficEnv):
     def __init__(self, mode="gui"):
         lights = [TrafficLightTwoWay(id="0", yield_time=5)]
         loops = ["loop{}".format(i) for i in range(8)]
+        flows = ["flow_n_s","flow_e_w","flow_s_n","flow_w_e"]
         basepath = os.path.join(os.path.dirname(__file__), "config", "simple")
         netfile = os.path.join(basepath, "traffic.net.xml")
         routefile = os.path.join(basepath, "traffic.rou.xml")
         guifile = os.path.join(basepath, "view.settings.xml")
         addfile = os.path.join(basepath, "traffic.add.xml")
         super(TrafficEnvSimple, self).__init__(mode=mode, lights=lights, netfile=netfile, routefile=routefile,
-                                               guifile=guifile, loops=loops, addfile=addfile, simulation_end=600)
+                                               guifile=guifile, loops=loops, addfile=addfile, simulation_end=300)
 
     def route_sample(self):
         low = 0.01

@@ -45,7 +45,7 @@ def concat_input(observation, input_space):
 
 
 class DQN(object):
-    def __init__(self, input_space, output_space, memory_size=20, replay_size=50, decay=0.9, epsilon=0.05, seed=None):
+    def __init__(self, input_space, output_space, memory_size=50, replay_size=100, decay=0.9, epsilon=0.05, seed=None):
         self._seed(seed=seed)
         self.input_space = input_space
         self.input_dim = calc_input_dim(input_space)

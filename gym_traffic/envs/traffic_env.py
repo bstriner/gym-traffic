@@ -24,7 +24,7 @@ class TrafficEnv(Env):
                  pngfile="tmp.png", mode="gui", detector="detector0", simulation_end=3600):
         # "--end", str(simulation_end),
         self.simulation_end = simulation_end
-        self.mode=mode
+        self.mode = mode
         self._seed()
         self.loops = loops
         self.loop_variables = [tc.LAST_STEP_MEAN_SPEED, tc.LAST_STEP_TIME_SINCE_DETECTION, tc.LAST_STEP_VEHICLE_NUMBER]
@@ -45,7 +45,7 @@ class TrafficEnv(Env):
         self.sumo_step = 0
         self.lights = lights
         self.action_space = spaces.DiscreteToMultiDiscrete(
-            spaces.MultiDiscrete([[0, len(light.actions)-1] for light in self.lights]), 'all')
+            spaces.MultiDiscrete([[0, len(light.actions) - 1] for light in self.lights]), 'all')
 
         trafficspace = spaces.Box(low=float('-inf'), high=float('inf'),
                                   shape=(len(self.loops) * len(self.loop_variables),))
@@ -83,7 +83,9 @@ class TrafficEnv(Env):
             self.sumo_running = False
 
     def _reward(self):
-        speed = traci.multientryexit.getLastStepMeanSpeed(self.detector)
+        speed = traci.multientryexit.getLastStepMeanSpeed(
+            self.detector) * traci.multientryexit.getLastStepVehicleNumber(self.detector)
+        print "Reward: {}".format(speed)
         return speed
 
     def _step(self, action):
