@@ -87,3 +87,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+/examples/output
+/examples/tmp.png
+/examples/tmp.rou.xml
+/gym_traffic/envs/config/simple/out.xml
+/.idea
