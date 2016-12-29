@@ -2,14 +2,15 @@ import gym
 import gym_traffic
 
 import gym
-env = gym.make('Traffic-Simple-v0')
+env = gym.make('Traffic-Simple-gui-v0')
 for i_episode in range(10):
     observation = env.reset()
     for t in range(10000):
         env.render()
-        print(observation)
+        #print(observation)
         action = env.action_space.sample()
         observation, reward, done, info = env.step(action)
+        print "Reward: {}".format(reward)
         if done:
             print("Episode finished after {} timesteps".format(t+1))
             break

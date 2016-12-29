@@ -20,7 +20,7 @@ else:
 class TrafficEnv(Env):
     metadata = {'render.modes': ['human', 'rgb_array']}
 
-    def __init__(self, lights, netfile, routefile, guifile, addfile, loops=[], tmpfile="tmp.rou.xml",
+    def __init__(self, lights, netfile, routefile, guifile, addfile, loops=[], lanes=[], tmpfile="tmp.rou.xml",
                  pngfile="tmp.png", mode="gui", detector="detector0", simulation_end=3600):
         # "--end", str(simulation_end),
         self.simulation_end = simulation_end
@@ -28,6 +28,7 @@ class TrafficEnv(Env):
         self._seed()
         self.loops = loops
         self.loop_variables = [tc.LAST_STEP_MEAN_SPEED, tc.LAST_STEP_TIME_SINCE_DETECTION, tc.LAST_STEP_VEHICLE_NUMBER]
+        self.lanes = lanes
         self.detector = detector
         args = ["--net-file", netfile, "--route-files", tmpfile, "--additional-files", addfile]
         if mode == "gui":
@@ -83,10 +84,15 @@ class TrafficEnv(Env):
             self.sumo_running = False
 
     def _reward(self):
-        speed = traci.multientryexit.getLastStepMeanSpeed(
-            self.detector) * traci.multientryexit.getLastStepVehicleNumber(self.detector)
-        print "Reward: {}".format(speed)
-        return speed
+        reward = 0.0
+        for lane in self.lanes:
+            reward -= traci.lane.getWaitingTime(lane)
+        return reward
+        #speed = traci.multientryexit.getLastStepMeanSpeed(self.detector) * \
+        #        traci.multientryexit.getLastStepVehicleNumber(self.detector)
+        #reward = np.sqrt(speed)
+        #print "Reward: {}".format(reward)
+        #return speed
 
     def _step(self, action):
         action = self.action_space(action)
