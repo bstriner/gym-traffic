@@ -12,7 +12,7 @@ import pandas as pd
 
 
 def test(env, agent, path, runner, nb_episodes=5, video_callable=None, force=True):
-    monitor = Monitor(path, video_callable=video_callable, force=True)(env)
+    monitor = Monitor(env, path, video_callable=video_callable, force=True)
     # tmp, agent.epsilon = agent.epsilon, 0.0
     rewards, losses = runner.run(monitor, agent, nb_episodes=nb_episodes, render=False, train=False)
     # agent.epsilon = tmp

@@ -2,21 +2,41 @@
 # os.environ["THEANO_FLAGS"] = "mode=FAST_COMPILE,device=cpu,floatX=float32"
 
 
-from gym_traffic.agents import DQN
+from gym_traffic.agents import DQN, EpsilonExplorer
 from gym_traffic.runners import SimpleRunner
 import gym
-from gym.wrappers import Monitor
-from tqdm import tqdm
-import pandas as pd
 from gym_traffic.runners.agent_runner import run_agent
-
-train_env = gym.make('Traffic-Simple-cli-v0')
-agent = DQN(train_env.observation_space, train_env.action_space)
-path = "output/traffic/simple"
+import sys
+import argparse
 
 
-def test_env_func():
-    return gym.make('Traffic-Simple-gui-v0')
+def example(gui):
+    train_env = gym.make('Traffic-Simple-cli-v0')
+    agent = DQN(train_env.observation_space, train_env.action_space, memory_size=50, replay_size=32)
+    path = "output/traffic/simple/dqn"
+    explorer = EpsilonExplorer(agent, epsilon=0.3, decay=2e-6)
+
+    if gui:
+        def test_env_func():
+            return gym.make('Traffic-Simple-gui-v0')
+    else:
+        def test_env_func():
+            return gym.make('Traffic-Simple-cli-v0')
+
+    runner = SimpleRunner(max_steps_per_episode=1000)
+    video_callable = None if gui else False
+    run_agent(runner=runner, agent=explorer, test_agent=agent, train_env=train_env, test_env_func=test_env_func,
+              nb_episodes=500, test_nb_episodes=10, nb_epoch=50, path=path, video_callable=video_callable)
 
 
-run_agent(agent=agent, train_env=train_env, test_env_func=test_env_func, nb_episodes=500, nb_epoch=50, path=path)
+def main(argv):
+    parser = argparse.ArgumentParser(description='Example DQN implementation of traffic light control.')
+    parser.add_argument('-G', '--gui', action="store_true",
+                        help='run GUI mode during testing to render videos')
+
+    args = parser.parse_args(argv)
+    example(args.gui)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

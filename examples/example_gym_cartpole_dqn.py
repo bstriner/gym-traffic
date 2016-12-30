@@ -11,7 +11,7 @@ import pandas as pd
 from gym_traffic.runners.agent_runner import run_agent
 
 train_env = gym.make('CartPole-v0')
-agent = DQN(train_env.observation_space, train_env.action_space, memory_size=4, replay_size=32)
+agent = DQN(train_env.observation_space, train_env.action_space, memory_size=4, replay_size=128)
 explorer = EpsilonExplorer(agent, epsilon=0.3, decay=2e-5)
 path = "output/cartpole/dqn"
 
@@ -25,7 +25,7 @@ def test_env_func():
     return train_env
 
 
-runner = SimpleRunner(max_steps_per_episode=500)
+runner = SimpleRunner(max_steps_per_episode=1000)
 
 run_agent(runner=runner, agent=explorer, test_agent=agent, train_env=train_env, test_env_func=test_env_func,
           nb_episodes=100, test_nb_episodes=100,

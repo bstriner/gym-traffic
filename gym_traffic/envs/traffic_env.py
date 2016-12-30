@@ -132,12 +132,12 @@ class TrafficEnv(Env):
         return observation
 
     def _render(self, mode='human', close=False):
+        if close:
+            if self.viewer is not None:
+                self.viewer.close()
+                self.viewer = None
+            return
         if self.mode == "gui":
-            if close:
-                if self.viewer is not None:
-                    self.viewer.close()
-                    self.viewer = None
-                return
             img = imread(self.pngfile, mode="RGB")
             if mode == 'rgb_array':
                 return img

@@ -70,7 +70,7 @@ class DQN(Agent):
         self.last_observation = None
 
     def build_network(self):
-        hidden_dim = 512
+        hidden_dim = 1024
         reg = lambda: L1L2Regularizer(l1=1e-7, l2=1e-7)
         x = Input(shape=(self.data_dim,), name="x")
         h = x
@@ -134,7 +134,7 @@ class DQN(Agent):
         self.replay.append(datum)
         if len(self.replay) > self.replay_size:
             self.replay.pop(0)
-
+        shuffle(self.replay)
         data = self.combined_replay()
         loss = self.training_model.train_on_batch(data[0:4], data[4])
 
