@@ -1,8 +1,9 @@
 import gym
 import gym_traffic
-
+from gym.wrappers import Monitor
 import gym
 env = gym.make('Traffic-Simple-gui-v0')
+env = Monitor(env, "output/traffic/simple/random")
 for i_episode in range(10):
     observation = env.reset()
     for t in range(10000):
