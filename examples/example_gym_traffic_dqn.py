@@ -21,7 +21,7 @@ def example(gui):
             return gym.make('Traffic-Simple-gui-v0')
     else:
         def test_env_func():
-            return gym.make('Traffic-Simple-cli-v0')
+            return train_env
 
     runner = SimpleRunner(max_steps_per_episode=1000)
     video_callable = None if gui else False
