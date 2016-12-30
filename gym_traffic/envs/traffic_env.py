@@ -9,6 +9,7 @@ from string import Template
 import os, sys
 import numpy as np
 import math
+import time
 
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -21,9 +22,10 @@ class TrafficEnv(Env):
     metadata = {'render.modes': ['human', 'rgb_array']}
 
     def __init__(self, lights, netfile, routefile, guifile, addfile, loops=[], lanes=[], tmpfile="tmp.rou.xml",
-                 pngfile="tmp.png", mode="gui", detector="detector0", simulation_end=3600):
+                 pngfile="tmp.png", mode="gui", detector="detector0", simulation_end=3600, sleep_between_restart=1):
         # "--end", str(simulation_end),
         self.simulation_end = simulation_end
+        self.sleep_between_restart=sleep_between_restart
         self.mode = mode
         self._seed()
         self.loops = loops
@@ -127,6 +129,9 @@ class TrafficEnv(Env):
 
     def _reset(self):
         self.stop_sumo()
+        # sleep required on some systems
+        if self.sleep_between_restart > 0:
+            time.sleep(self.sleep_between_restart)
         self.start_sumo()
         observation = self._observation()
         return observation
