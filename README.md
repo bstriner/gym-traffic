@@ -1,11 +1,18 @@
-# gym-env-traffic
+# gym-traffic
 OpenAI Gym Environment for Traffic Control
+
+## Installation
+```buildoutcfg
+git clone https://github.com/bstriner/gym-traffic.git
+cd gym-traffic
+python setup.py install
+```
 
 ##Environments
 
 ###Simple Environment
 `Traffic-Simple-cli-v0` and `Traffic-Simple-gui-v0` model a simple intersection 
-with North-South, South-North, Each-West, and West-East traffic.
+with North-South, South-North, East-West, and West-East traffic.
 
 CLI runs `sumo` and GUI runs `sumo-gui`. GUI is slower but required if you want to render video.
 
