@@ -46,7 +46,7 @@ def concat_input(observation, input_space):
 
 
 class DQN(Agent):
-    def __init__(self, input_space, action_space, memory_size=10, replay_size=64, discount=0.98, seed=None,
+    def __init__(self, input_space, action_space, memory_size=10, replay_size=64, discount=0.95, seed=None,
                  optimizer=None):
         super(DQN, self).__init__(input_space, action_space, seed=seed)
         self.input_dim = calc_input_dim(input_space)
@@ -58,7 +58,7 @@ class DQN(Agent):
         self.replay = []
         self.new_episode()
         if optimizer is None:
-            optimizer = Adam(1e-4, decay=1e-5)
+            optimizer = Adam(1e-4, decay=1e-6)
         self.optimizer = optimizer
         if not isinstance(action_space, spaces.Discrete):
             raise NotImplementedError("Only Discrete action spaces supported")
@@ -134,7 +134,7 @@ class DQN(Agent):
         self.replay.append(datum)
         if len(self.replay) > self.replay_size:
             self.replay.pop(0)
-        shuffle(self.replay)
+        #shuffle(self.replay)
         data = self.combined_replay()
         loss = self.training_model.train_on_batch(data[0:4], data[4])
 

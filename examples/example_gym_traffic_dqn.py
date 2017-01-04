@@ -9,10 +9,12 @@ from gym_traffic.runners.agent_runner import run_agent
 import sys
 import argparse
 
+def build_agent(env):
+    return DQN(env.observation_space, env.action_space, memory_size=50, replay_size=32)
 
 def example(gui):
     train_env = gym.make('Traffic-Simple-cli-v0')
-    agent = DQN(train_env.observation_space, train_env.action_space, memory_size=50, replay_size=32)
+    agent = build_agent(train_env)
     path = "output/traffic/simple/dqn"
     explorer = EpsilonExplorer(agent, epsilon=0.3, decay=2e-6)
 

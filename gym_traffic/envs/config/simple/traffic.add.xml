@@ -8,7 +8,11 @@
     <inductionLoop id="loop5" lane="0_s_0" pos="100" freq="1" file="out.xml"/>
     <inductionLoop id="loop6" lane="0_e_0" pos="100" freq="1" file="out.xml"/>
     <inductionLoop id="loop7" lane="0_w_0" pos="100" freq="1" file="out.xml"/>
-    <!--
+    <inductionLoop id="loop8" lane="n_0_0" pos="-50" freq="1" file="out.xml"/>
+    <inductionLoop id="loop9" lane="s_0_0" pos="-50" freq="1" file="out.xml"/>
+    <inductionLoop id="loop10" lane="e_0_0" pos="-50" freq="1" file="out.xml"/>
+    <inductionLoop id="loop11" lane="w_0_0" pos="-50" freq="1" file="out.xml"/>
+
     <entryExitDetector id="detector0" freq="1" file="out.xml" >
       <detEntry lane="n_0_0" pos="50" />
       <detEntry lane="s_0_0" pos="50" />
@@ -19,5 +23,4 @@
       <detExit lane="0_w_0" pos="-50" />
       <detExit lane="0_e_0" pos="-50" />
    </entryExitDetector>
-   -->
 </additional>
