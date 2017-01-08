@@ -91,15 +91,15 @@ class TrafficEnv(Env):
         #for lane in self.lanes:
         #    reward -= traci.lane.getWaitingTime(lane)
         #return reward
-        #speed = traci.multientryexit.getLastStepMeanSpeed(self.detector) #* \
-        #        traci.multientryexit.getLastStepVehicleNumber(self.detector)
+        speed = traci.multientryexit.getLastStepMeanSpeed(self.detector) * \
+                traci.multientryexit.getLastStepVehicleNumber(self.detector)
         #reward = np.sqrt(speed)
         #print "Reward: {}".format(reward)
         #return speed
-        reward = 0.0
-        for loop in self.exitloops:
-            reward += traci.inductionloop.getLastStepVehicleNumber(loop)
-        return reward
+        #reward = 0.0
+        #for loop in self.exitloops:
+        #    reward += traci.inductionloop.getLastStepVehicleNumber(loop)
+        return speed
 
     def _step(self, action):
         action = self.action_space(action)

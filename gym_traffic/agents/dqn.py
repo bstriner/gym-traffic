@@ -70,14 +70,11 @@ class DQN(Agent):
         self.last_observation = None
 
     def build_network(self):
-        hidden_dim = 512
+        hidden_dim = 1024
         reg = lambda: L1L2Regularizer(l1=1e-7, l2=1e-7)
         x = Input(shape=(self.data_dim,), name="x")
         h = x
         h = Dense(hidden_dim, W_regularizer=reg())(h)
-        h = BatchNormalization(mode=1)(h)
-        h = LeakyReLU(0.2)(h)
-        h = Dense(hidden_dim / 2, W_regularizer=reg())(h)
         h = BatchNormalization(mode=1)(h)
         h = LeakyReLU(0.2)(h)
         h = Dense(hidden_dim / 2, W_regularizer=reg())(h)
