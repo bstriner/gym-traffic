@@ -16,7 +16,7 @@ def example(gui):
     train_env = gym.make('Traffic-Simple-cli-v0')
     agent = build_agent(train_env)
     path = "output/traffic/simple/dqn"
-    explorer = EpsilonExplorer(agent, epsilon=0.3, decay=2e-6)
+    explorer = EpsilonExplorer(agent, epsilon=0.1, decay=1e-7)
 
     if gui:
         def test_env_func():
@@ -27,8 +27,8 @@ def example(gui):
 
     runner = SimpleRunner(max_steps_per_episode=1000)
     video_callable = None if gui else False
-    run_agent(runner=runner, agent=explorer, test_agent=agent, train_env=train_env, test_env_func=test_env_func,
-              nb_episodes=500, test_nb_episodes=10, nb_epoch=50, path=path, video_callable=video_callable)
+    run_agent(runner=runner, agent=explorer, test_agent=explorer, train_env=train_env, test_env_func=test_env_func,
+              nb_episodes=500, test_nb_episodes=10, nb_epoch=100, path=path, video_callable=video_callable)
 
 
 def main(argv):

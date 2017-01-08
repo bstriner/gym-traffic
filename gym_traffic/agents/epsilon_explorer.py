@@ -2,12 +2,15 @@ from agent import Agent
 
 
 class EpsilonExplorer(Agent):
-    def __init__(self, agent, epsilon=0.3, decay=1e-6, seed=None):
+    def __init__(self, agent, epsilon=0.1, decay=1e-6, seed=None):
         self.agent = agent
         self.step = 0
         self.epsilon = epsilon
         self.decay = decay
         super(EpsilonExplorer, self).__init__(agent.input_space, agent.action_space, seed=seed)
+
+    def __getattr__(self, item):
+        return getattr(self.agent, item)
 
     def new_episode(self):
         return self.agent.new_episode()
