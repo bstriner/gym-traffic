@@ -16,7 +16,7 @@ def example(gui):
     train_env = gym.make('Traffic-Simple-cli-v0')
     agent = build_agent(train_env)
     path = "output/traffic/simple/dqn"
-    explorer = EpsilonExplorer(agent, epsilon=0.1, decay=1e-7)
+    explorer = EpsilonExplorer(agent, epsilon=0.5, decay=5e-7)
 
     if gui:
         def test_env_func():

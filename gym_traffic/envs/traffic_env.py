@@ -21,15 +21,16 @@ else:
 class TrafficEnv(Env):
     metadata = {'render.modes': ['human', 'rgb_array']}
 
-    def __init__(self, lights, netfile, routefile, guifile, addfile, loops=[], lanes=[],exitloops=[], tmpfile="tmp.rou.xml",
+    def __init__(self, lights, netfile, routefile, guifile, addfile, loops=[], lanes=[], exitloops=[],
+                 tmpfile="tmp.rou.xml",
                  pngfile="tmp.png", mode="gui", detector="detector0", simulation_end=3600, sleep_between_restart=1):
         # "--end", str(simulation_end),
         self.simulation_end = simulation_end
-        self.sleep_between_restart=sleep_between_restart
+        self.sleep_between_restart = sleep_between_restart
         self.mode = mode
         self._seed()
         self.loops = loops
-        self.exitloops=exitloops
+        self.exitloops = exitloops
         self.loop_variables = [tc.LAST_STEP_MEAN_SPEED, tc.LAST_STEP_TIME_SINCE_DETECTION, tc.LAST_STEP_VEHICLE_NUMBER]
         self.lanes = lanes
         self.detector = detector
@@ -87,19 +88,22 @@ class TrafficEnv(Env):
             self.sumo_running = False
 
     def _reward(self):
-        #reward = 0.0
-        #for lane in self.lanes:
+        # reward = 0.0
+        # for lane in self.lanes:
         #    reward -= traci.lane.getWaitingTime(lane)
-        #return reward
-        speed = traci.multientryexit.getLastStepMeanSpeed(self.detector) * \
-                traci.multientryexit.getLastStepVehicleNumber(self.detector)
-        #reward = np.sqrt(speed)
-        #print "Reward: {}".format(reward)
-        #return speed
-        #reward = 0.0
-        #for loop in self.exitloops:
+        # return reward
+        speed = traci.multientryexit.getLastStepMeanSpeed(self.detector)
+        count = traci.multientryexit.getLastStepVehicleNumber(self.detector)
+        reward = speed * count
+        # print("Speed: {}".format(traci.multientryexit.getLastStepMeanSpeed(self.detector)))
+        # print("Count: {}".format(traci.multientryexit.getLastStepVehicleNumber(self.detector)))
+        # reward = np.sqrt(speed)
+        # print "Reward: {}".format(reward)
+        # return speed
+        # reward = 0.0
+        # for loop in self.exitloops:
         #    reward += traci.inductionloop.getLastStepVehicleNumber(loop)
-        return speed
+        return max(reward, 0)
 
     def _step(self, action):
         action = self.action_space(action)
